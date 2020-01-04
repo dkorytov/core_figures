@@ -1,15 +1,26 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 
 
 from __future__ import division, print_function
 
 import numpy as np
+import os
+import matplotlib
+#checks if there is a display to use.
+if os.environ.get('DISPLAY') is None:
+    matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 import dtk
 import sys
 
 from util import *
+
+from matplotlib import rc
+rc('text', usetex=True)
+rc('font', **{'family':'serif', 'serif':['Computer Modern Roman'], })
+rc('font', size=18)
 
 def plot_diff(data,bins,label):
     h,xbins = np.histogram(data,bins=bins)
@@ -53,15 +64,16 @@ def plot_subhalo_dm_cores(param_file_name, plot_show = True):
     # plt.plot(r_bins_avg, h/r_bins_vol, '-o', label='cores fit')
     
     plt.yscale('log')
-    plt.grid()
-    plt.ylabel('Density [h^3 Mpc^-3]')
-    plt.xlabel('R/R$_{200}$')
-    plt.legend(loc='best')
-
+    plt.ylabel('Normalized Density [h$^3$ Mpc$^{-3}$]')
+    plt.xlabel('r/R$_{200}$')
+    plt.legend(loc='best', framealpha=0.0)
+    plt.tight_layout()
+    
     plt.figure()
     plt.hist(core_data['del_r_r200'])
     plt.hist(subhalo_data['del_r_r200'])
-
+    plt.tight_layout()
+    
     dtk.save_figs('figs/'+param_file_name+'/'+__file__+'/')
     plt.show()
 

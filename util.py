@@ -1,6 +1,11 @@
 import numpy as np
 import dtk
 
+from matplotlib import rc
+rc('text', usetex=True)
+rc('font', **{'family':'serif', 'serif':['Computer Modern Roman'], })
+rc('font', size=18)
+
 def sort_dic(dic,sort_key):
     srt = np.argsort(dic[sort_key])
     for key in dic.keys():
@@ -34,7 +39,7 @@ def load_cores(core_loc):
     result['x']       = dtk.gio_read(core_loc,'x')
     result['y']       = dtk.gio_read(core_loc,'y')
     result['z']       = dtk.gio_read(core_loc,'z')
-    result['infall_mass'] = dtk.gio_read(core_loc,'infall_mass')
+    result['infall_mass'] = dtk.gio_read(core_loc,'infall_tree_node_mass')
     result['radius']  = dtk.gio_read(core_loc,'radius')
     result['infall_step'] = dtk.gio_read(core_loc,'infall_step')
     result['central']   = dtk.gio_read(core_loc,'central')
