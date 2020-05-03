@@ -1,0 +1,7 @@
+core_loc    /data/a/cpac/dkorytov/data/AlphaQ/core_catalog10_rev4070/${step}.coreproperties
+fof_loc     /data/a/cpac/dkorytov/data/AlphaQ/b0168/STEP${step}/m000-${step}.fofproperties
+subhalo_loc /data/a/cpac/dkorytov/data/AlphaQ/b0168/STEP${step}/m000-${step}.subhaloproperties
+bighalo_loc /data/a/cpac/dkorytov/data/AlphaQ/b0168/STEP${step}/m000-${step}.bighaloparticles
+sod_loc     /data/a/cpac/dkorytov/data/AlphaQ/M200/STEP${step}/m000-${step}.sodproperties
+step 499
+steps 464 475 487 499
