@@ -28,14 +28,36 @@ def combine_dics(dic1, dic2, key):
         dic_result[key] = np.copy(dic2[key][found])
     return dic_result
 
+def concat_dics(dics):
+    master_key_set = None
+    for dic in dics:
+        if master_key_set is None:
+            master_key_set = set(dic.keys())
+        else:
+            key_set = set(dic.keys())
+            if key_set != master_key_set:
+                print('key_set:', key_set)
+                print('masteer_key_set:', master_key_set)
+                raise KeyError('Keys do not match')
+    result = {}
+    for key in master_key_set:
+        data_list = [dic[key] for dic in dics]
+        result[key] = np.concatenate(data_list)
+    return result
+
+def reorder_dic(dic, srt):
+    for key in list(dic.keys()):
+        dic[key] = dic[key][srt]
+        
 def plot_subhalo_dm_cores():
     pass
     return
 
-def load_cores(core_loc):
+def load_cores(core_loc, sort=True, step=None):
     print("loading cores...")
     result = {}
     result['fof_tag'] = dtk.gio_read(core_loc,'fof_halo_tag')
+    result['core_tag']= dtk.gio_read(core_loc,'core_tag')
     result['x']       = dtk.gio_read(core_loc,'x')
     result['y']       = dtk.gio_read(core_loc,'y')
     result['z']       = dtk.gio_read(core_loc,'z')
@@ -43,7 +65,10 @@ def load_cores(core_loc):
     result['radius']  = dtk.gio_read(core_loc,'radius')
     result['infall_step'] = dtk.gio_read(core_loc,'infall_step')
     result['central']   = dtk.gio_read(core_loc,'central')
-    sort_dic(result,'fof_tag')
+    if step is not None:
+        result['step'] = step*np.ones(len(result['fof_tag']), dtype='int')
+    if sort:
+        sort_dic(result,'fof_tag')
     return result
 
 def load_fof(fof_loc, min_mass = None):
