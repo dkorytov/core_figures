@@ -1,6 +1,11 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 
 from __future__ import division, print_function
+
+from matplotlib import rc
+rc('text', usetex=True)
+rc('font', **{'family':'serif', 'serif':['Computer Modern Roman'], })
+rc('font', size=18)
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -56,7 +61,7 @@ def load_cores(core_loc,redshift, stepz):
     print('z')
     result['z']       = dtk.gio_read(core_loc,'z')
     print('infall_mass')
-    result['infall_mass'] = dtk.gio_read(core_loc,'infall_mass')
+    result['infall_mass'] = dtk.gio_read(core_loc,'infall_tree_node_mass')
     print('radius')
     result['radius'] = dtk.gio_read(core_loc,'radius')
     print('infall_step')
@@ -65,6 +70,7 @@ def load_cores(core_loc,redshift, stepz):
     result['central'] = dtk.gio_read(core_loc,'central')
     print('infall_redshift')
     result['infall_redshift'] = stepz.get_z(result['infall_step'])
+    result['infall_redshift+1'] = result['infall_redshift']+0.0999
     return result
 
 
@@ -109,7 +115,6 @@ def plot_a_b(core_data, a, a_label, b, b_label, a_bins=None, b_bins=None,yscale=
     plt.pcolor(xbins, ybins, h.T, cmap='PuBu', norm=clr.LogNorm())
     cb = plt.colorbar()
     cb.set_label('Count')
-    plt.grid()
     plt.xlabel(a_label);plt.ylabel(b_label)
     if xscale == 'log':
         plt.xscale('log')
@@ -157,6 +162,7 @@ if __name__ == "__main__":
     core_loc = param.get_string('core_loc')
     steps = param.get_int_list('steps')
     step = param.get_int('step')
+
     fof_loc = param.get_string('fof_loc')
     stepz = dtk.StepZ(sim_name = 'AlphaQ')
     cores = load_cores(core_loc.replace("${step}",str(step)),0, stepz)
@@ -166,11 +172,13 @@ if __name__ == "__main__":
     cores_sat = select_dic(cores,cores['central']==0)
     cores_cen = select_dic(cores,cores['central']==1)
 
-    redshift = stepz.get_z(steps)[::-1]
+    # redshift = stepz.get_z(steps)[::-1]
+    redshift = np.sort(np.unique(cores['infall_redshift']))
+    print(redshift)
     scale_factor = stepz.get_a(steps)+0.001
     redshift = redshift[redshift<8]
     print('processing cores')
-    #process_cores(cores, cores_cen)
+    process_cores(cores, cores_cen)
     print('plot1')
     plot_a_b(cores_sat,'infall_step', 'infall step', 
              'infall_mass', 'Infall Mass', 
@@ -192,44 +200,56 @@ if __name__ == "__main__":
              'radius', 'Core Radius [Mpc/h]',
              np.logspace(10,15,100), np.logspace(-3,0,100), yscale='log', xscale='log',
              plot_median=True)
+    print('plot3.1')
+    plot_a_b(cores, 'infall_mass', 'Infall Mass [Msun/h]',  
+             'radius', 'Core Radius [Mpc/h]',
+             np.logspace(10,15,100), np.logspace(-4,0,100), yscale='log', xscale='log')
     print('plot4')
     plot_a_b(cores_sat, 'infall_step', 'Infall Step',  
              'radius', 'Core Radius [Mpc/h]',
              np.array(steps), np.logspace(-3,0,100), yscale='log',
              plot_median=True)
     print('plot5')
-    plot_a_b(cores_sat, 'infall_redshift', "Infall Redshift",
+
+
+    plot_a_b(cores_sat, 'infall_redshift+1', "Infall Redshift + 0.1",
+             'radius', 'Core Radius [Mpc/h]', 
+             redshift+.1,
+             np.logspace(-3,0,100), yscale='log', xscale='log',)
+
+    plot_a_b(cores_sat, 'infall_redshift', "Infall redshift",
              'radius', 'Core Radius [Mpc/h]', 
              redshift,
-             np.logspace(-3,0,100), yscale='log',
-             plot_median=True)
+             np.logspace(-3,0,100), yscale='log', )
+
+
     print('plot6')
     plot_a(cores_sat, 'infall_redshift', "Infall Redshift",
            a_bins=redshift)
-    # print('plot7')
-    # plot_a(cores_sat, 'radius', "Core Radius",
-    #        a_bins = np.logspace(-3,0,100),
-    #        xscale = 'log')
-    # print('plot8')
-    # plot_a(cores_sat, 'infall_mass', "Infall Mass",
-    #        a_bins = np.logspace(10,15,100),
-    #        xscale = 'log')
-    # print('plot9')
-    # plot_a(cores_sat, 'infall_redshift', "Infall Redshift",
-    #        a_bins=redshift,
-    #        yscale='log')
-    # print('plot10')
-    # plot_a(cores_sat, 'radius', "Core Radius",
-    #        a_bins = np.logspace(-3,0,100),
-    #        xscale = 'log',
-    #        yscale='log')
-    # print('plot11')
-    # plot_a(cores_sat, 'infall_mass', "Infall Mass",
-    #        a_bins = np.logspace(10,15,100),
-    #        xscale = 'log',
-    #        yscale='log'   )
+    print('plot7')
+    plot_a(cores_sat, 'radius', "Core Radius",
+           a_bins = np.logspace(-3,0,100),
+           xscale = 'log')
+    print('plot8')
+    plot_a(cores_sat, 'infall_mass', "Infall Mass",
+           a_bins = np.logspace(10,15,100),
+           xscale = 'log')
+    print('plot9')
+    plot_a(cores_sat, 'infall_redshift', "Infall Redshift",
+           a_bins=redshift,
+           yscale='log')
+    print('plot10')
+    plot_a(cores_sat, 'radius', "Core Radius",
+           a_bins = np.logspace(-3,0,100),
+           xscale = 'log',
+           yscale='log')
+    print('plot11')
+    plot_a(cores_sat, 'infall_mass', "Infall Mass",
+           a_bins = np.logspace(10,15,100),
+           xscale = 'log',
+           yscale='log'   )
 
     ###### Saving figs #######
-    dtk.save_figs("figs/"+sys.argv[1]+"/"+__file__+"/")
+    dtk.save_figs("figs/"+__file__+"/"+sys.argv[1]+"/")
     plt.show()
     

@@ -74,7 +74,7 @@ def plot_subhalo_dm_cores(param_file_name, plot_show = True):
     plt.hist(subhalo_data['del_r_r200'])
     plt.tight_layout()
     
-    dtk.save_figs('figs/'+param_file_name+'/'+__file__+'/')
+    dtk.save_figs('figs/'+param_file_name+'/'+__file__+'/', extension='.pdf')
     plt.show()
 
 def plot_cores_in_halos(param_file_name,plot_show = True):
