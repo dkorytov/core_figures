@@ -108,8 +108,6 @@ def pyplot_zoom_out(amount=0.0, horizontal_amount=None, vertical_amount=None, ri
     xcen = np.average(xlim)
     plt.xlim([xcen-xdiff_cen*(1+left_amount), xcen+xdiff_cen*(1.0+right_amount)])
 
-
-    
 def plot_individual_halos(param_file_name):
     param = dtk.Param(param_file_name)
     core_loc = param.get_string('core_loc')
