@@ -74,7 +74,7 @@ def plot_halo(fof_tag, fof_data, sod_data, core_data, subhalo_data, bighalo_data
     plt.ylabel('y [$h^{-1}$ Mpc]')
     plt.xlabel('x [$h^{-1}$ Mpc]')
 
-    plt.text(0.975, 0.025, 'M$_{{200c}}$ = {:2.2e}[$h_{{-1}}$M$_{{200c}}$]'.format(mass_fof),
+    plt.text(0.975, 0.025, 'M$_{{200c}}$ = {:2.2e}[$h_{{-1}}$M$_{{200c}}$]'.format(mass_sod),
              transform=plt.gca().transAxes, verticalalignment='bottom',
              horizontalalignment='right')
     plt.tight_layout()

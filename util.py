@@ -91,6 +91,9 @@ def load_sod(sod_loc):
     result['fof_tag'] = dtk.gio_read(sod_loc, 'fof_halo_tag')
     result['sod_halo_radius'] = dtk.gio_read(sod_loc, 'sod_halo_radius')
     result['sod_halo_mass'] = dtk.gio_read(sod_loc, 'sod_halo_mass')
+    result['x'] = dtk.gio_read(sod_loc,'fof_halo_center_x')
+    result['y'] = dtk.gio_read(sod_loc,'fof_halo_center_y')
+    result['z'] = dtk.gio_read(sod_loc,'fof_halo_center_z')    
     return result
 
 def load_subhalo(sh_loc):
